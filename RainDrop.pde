@@ -4,61 +4,115 @@ class RainDrop {
   float offsetY;
   float offsetZ;
   int speed;
+  float speedFloat;
   float weight;
+  float a, b;
+  float alpha;
+  int type;
+  float spawnY;
   
   RainDrop() {
+    a = 3.0;
+    b = 4.0;
+    type = 2;
     respawn();
   }
   
   void respawn() {
-    reflect = false;
-    offsetX = int(random(-71, 72)) * 9;
-    offsetY = 200 + int(random(0, 25)) * 12;
-    //offsetZ = random(-400, 0);
-    offsetZ = 0;
-    speed = int(random(1, 5));
-    weight = random(0.25, 8);
+    switch(type) {
+      case 0:
+        spawnY = 250;
+        reflect = false;
+        offsetX = int(random(-142, 144)) * 7;
+        offsetY = spawnY + int(random(0, 25)) * b;
+        //offsetZ = random(-400, 0);
+        offsetZ = 0;
+        speed = int(random(1, 5));
+        // speed = 1;
+        weight = random(0.5, 1.5);
+        // weight = 2.0;
+        alpha = random(32, 255);
+      break;
+
+      case 1:
+        spawnY = 250;
+        offsetX = random(-960, 960);
+        offsetY = spawnY + int(random(0, 100));
+        offsetZ = 0;
+        speedFloat = random(2, 20);
+        weight = speedFloat * 0.25;
+        alpha = speedFloat * 12.75;
+      break;
+
+      case 2:
+        spawnY = 2500;
+        offsetX = random(-960, 960);
+        offsetY = spawnY + int(random(0, 100));
+        offsetZ = 0;
+        speedFloat = random(50, 200);
+        weight = 1.0;
+        alpha = 128;
+      break;
+    }
   }    
   
   void update() {
-    //offsetZ += 10;
-    if (frameCount % speed == 0) {
-      reflect = !reflect;
-      offsetY -= 12;
+    switch(type) {
+      case 0:
+        //offsetZ += 10;
+        if (frameCount % speed == 0) {
+          reflect = !reflect;
+          offsetY -= b;
+        }
+      break;
+
+      case 1:
+        offsetY -= speedFloat;
+        offsetZ += speedFloat * 0.5;
+      break;
+
+      case 2:
+        offsetY -= speedFloat;
+      break;
     }
-    if (offsetY < -200) {
+
+    if (offsetY < -spawnY) {
       respawn();
     }
   }
   
   void draw() {
     pushMatrix();
-    stroke(255);
-    strokeWeight(weight);
-    noFill();
-    translate(offsetX, offsetY, offsetZ);
-    //rotateX(-PI/12);
-    if (reflect) {
-      translate(-9, 0);
-      scale(-1, 1);
-    }
-    beginShape();
-    vertex(0, 0);
-    vertex(-9, -12);
-    vertex(0, -24);
-    vertex(-9, -36);
-    vertex(0, -48);
-    vertex(-9, -60);
-    endShape();
-    //line(0, 0, -9, -12);
-    //translate(-9, -12);
-    //line(0, 0, 9, -12);
-    //translate(9, -12);
-    //line(0, 0, -9, -12);
-    //translate(-9, -12);
-    //line(0, 0, 9, -12);
-    //translate(9, -12);
-    //line(0, 0, -9, -12);
+      stroke(255, alpha);
+      strokeWeight(weight);
+      noFill();
+      translate(offsetX, offsetY, offsetZ);
+      switch(type) {
+        case 0:
+          //rotateX(-PI/12);
+          if (reflect) {
+            translate(-a, 0);
+            scale(-1, 1);
+          }
+          beginShape();
+            vertex(0, 0);
+            vertex(-a, -b);
+            vertex(0, -b * 2);
+            vertex(-a, -b * 3);
+            vertex(0, -b * 4);
+            vertex(-a, -b * 5);
+          endShape();
+        break;
+
+        case 1:
+          // rect(0, 0, 10, 10);
+          line(0, 0, 0, 10);
+        break;
+
+        case 2:
+          line(0, 0, 0, speedFloat);
+        break;
+      }
     popMatrix();
   }
 };
