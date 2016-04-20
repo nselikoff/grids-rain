@@ -15,6 +15,13 @@ class RainDrop {
     a = 3.0;
     b = 4.0;
     type = 2;
+    reflect = false;
+    offsetX = offsetY = offsetZ = 0;
+    speed = 1;
+    speedFloat = 10.0;
+    weight = 1.0;
+    alpha = 255;
+    spawnY = 250;
     respawn();
   }
   
@@ -53,10 +60,20 @@ class RainDrop {
         weight = 1.0;
         alpha = 128;
       break;
+
+      case 3:
+        spawnY = 2500;
+        offsetX = noise(frameCount * 0.03) * 1920 - 960;
+        offsetY = spawnY + int(random(0, 100));
+        offsetZ = 0;
+        speedFloat = random(50, 200);
+        weight = 1.0;
+        alpha = 128;
+      break;
     }
   }    
   
-  void update() {
+  void update(float extraOffset) {
     switch(type) {
       case 0:
         //offsetZ += 10;
@@ -74,7 +91,13 @@ class RainDrop {
       case 2:
         offsetY -= speedFloat;
       break;
+
+      case 3:
+        offsetY -= speedFloat;
+      break;
     }
+
+    // offsetZ += extraOffset;
 
     if (offsetY < -spawnY) {
       respawn();
@@ -110,6 +133,10 @@ class RainDrop {
         break;
 
         case 2:
+          line(0, 0, 0, speedFloat);
+        break;
+
+        case 3:
           line(0, 0, 0, speedFloat);
         break;
       }
