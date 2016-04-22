@@ -9,8 +9,8 @@ SyphonServer server;
 
 RainDrop[] rainDrops;
 int numRainDrops = 10000;
-int numActiveRainDrops = 1;
-float offsetX = 0;
+int numActiveRainDrops = 100;
+float offsetX = -10;
 
 // int screenWidth = 1280, screenHeight = 289;
 int screenWidth = 1920, screenHeight = 434;
@@ -23,7 +23,7 @@ void settings() {
 void setup() {
 
   // Create syhpon server to send frames out.
-  server = new SyphonServer(this, "sketch_rain");
+  server = new SyphonServer(this, "rain");
 
   oscP5 = new OscP5(this,12000);
 
@@ -81,7 +81,6 @@ void oscEvent(OscMessage theOscMessage) {
   else if (addr.equals("/FromVDMX/Slider4")) {
   }
   else if (addr.equals("/FromVDMX/Slider5")) {
-    numActiveRainDrops = int(map(floatVal, 0, 1, 1, 10000));
   }
   else if (addr.equals("/FromVDMX/Slider6")) {
     offsetX = map(floatVal, 0, 1, -10, 10);
@@ -89,6 +88,7 @@ void oscEvent(OscMessage theOscMessage) {
   else if (addr.equals("/FromVDMX/Slider7")) {
   }
   else if (addr.equals("/FromVDMX/Slider8")) {
+    numActiveRainDrops = int(map(floatVal, 0, 1, 100, 10000));
   }
   else if (addr.equals("/FromVDMX/S1")) {
   }

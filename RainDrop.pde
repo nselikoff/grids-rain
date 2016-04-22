@@ -14,7 +14,7 @@ class RainDrop {
   RainDrop() {
     a = 3.0;
     b = 4.0;
-    type = 2;
+    type = 0;
     reflect = false;
     offsetX = offsetY = offsetZ = 0;
     speed = 1;
@@ -27,7 +27,7 @@ class RainDrop {
   
   void respawn() {
     switch(type) {
-      case 0:
+      case 3: // geometric
         spawnY = 250;
         reflect = false;
         offsetX = int(random(-142, 144)) * 7;
@@ -41,7 +41,7 @@ class RainDrop {
         alpha = random(32, 255);
       break;
 
-      case 1:
+      case 2: // driving
         spawnY = 250;
         offsetX = random(-960, 960);
         offsetY = spawnY + int(random(0, 100));
@@ -51,7 +51,7 @@ class RainDrop {
         alpha = speedFloat * 12.75;
       break;
 
-      case 2:
+      case 1: // straight
         spawnY = 2500;
         offsetX = random(-960, 960);
         offsetY = spawnY + int(random(0, 100));
@@ -61,7 +61,7 @@ class RainDrop {
         alpha = 128;
       break;
 
-      case 3:
+      case 0: // noise
         spawnY = 2500;
         offsetX = noise(frameCount * 0.03) * 1920 - 960;
         offsetY = spawnY + int(random(0, 100));
@@ -75,7 +75,7 @@ class RainDrop {
   
   void update(float extraOffset) {
     switch(type) {
-      case 0:
+      case 3:
         //offsetZ += 10;
         if (frameCount % speed == 0) {
           reflect = !reflect;
@@ -83,16 +83,16 @@ class RainDrop {
         }
       break;
 
-      case 1:
+      case 2:
         offsetY -= speedFloat;
         offsetZ += speedFloat * 0.5;
       break;
 
-      case 2:
+      case 1:
         offsetY -= speedFloat;
       break;
 
-      case 3:
+      case 0:
         offsetY -= speedFloat;
       break;
     }
@@ -111,7 +111,7 @@ class RainDrop {
       noFill();
       translate(offsetX, offsetY, offsetZ);
       switch(type) {
-        case 0:
+        case 3:
           //rotateX(-PI/12);
           if (reflect) {
             translate(-a, 0);
@@ -127,16 +127,16 @@ class RainDrop {
           endShape();
         break;
 
-        case 1:
+        case 2:
           // rect(0, 0, 10, 10);
           line(0, 0, 0, 10);
         break;
 
-        case 2:
+        case 1:
           line(0, 0, 0, speedFloat);
         break;
 
-        case 3:
+        case 0:
           line(0, 0, 0, speedFloat);
         break;
       }
